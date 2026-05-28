@@ -1,6 +1,7 @@
 /** @type {import('jest').Config} */
 
 const config = {
+  verbose: true,
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.{js,jsx}'],
   coverageDirectory: 'coverage',
