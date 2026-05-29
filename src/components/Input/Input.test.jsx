@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Input } from "./Input";
 
 const testPlaceholder = 'test plaseholder';
@@ -60,7 +61,7 @@ describe('Input',() => {
         expect(screen.getByDisplayValue('123')).toBeInTheDocument();
     });
 
-    it('should invoke the onChange callback', () => {
+    it('should invoke the onChange callback', async () => {
         const onChange = jest.fn();
 
         render(
@@ -77,8 +78,21 @@ describe('Input',() => {
         // базовый подход, который позволяет
         // запустить любой валидный элемент в документе.
         // В fireEvent есть разные действия, можно посмотреть их после точки
-        fireEvent.change(element, { target: { value: '12345' }});
+        // !!!
+        // fireEvent.change(element, { target: { value: '12345' }});
 
-        expect(onChange).toHaveBeenCalledTimes(1);
+        // 2-nd variant:
+        // install node package @testing-library/user-event
+        // в нашем случае для печатанья мы ипользуем type
+        // в данном случае сколько символов мы передадим,
+        // столько раз вызовется и onChange
+        // первым параметром userEvent.type(element, '67')
+        // мы указываем - где печатаем, а вторым - чот печатаем
+        // userEvent - асинхронные,
+        // потому перед вызовом колбэка мы укажем async,
+        // а перед функцией мы дожидаемся выполнения с помощью await
+        await userEvent.type(element, '67');
+
+        expect(onChange).toHaveBeenCalledTimes(2);
     });
 });
