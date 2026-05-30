@@ -9,6 +9,18 @@ describe('App', () => {
     it('should render App with form elements and a title', () => {
         const { container } = render(<App />);
 
+        // сгенерировать и заполнить песочницу
+        // на https://testing-playground.com/ своим html,
+        // для генерации нужно запустить тест
+        // !!! TESTING !!!
+        // screen.logTestingPlaygroundURL();
+
+        // импортируем logRoles из @testing-library/react
+        // и запускаем тесты, подсказки будут в консоли
+        // !!! TESTING !!!
+        // const { baseElement } = render(<App />);
+        // logRoles(baseElement);
+
         expect(screen.getByTestId('app')).toBeInTheDocument();
 
         const userNameInput = screen.getByLabelText(/User name/);
