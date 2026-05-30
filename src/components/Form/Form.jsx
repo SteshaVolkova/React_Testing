@@ -17,6 +17,7 @@ const Form = ({ onSubmit, onSuccess, onError, children, className }) => {
 
   return (
     <form
+      data-testid="form"
       className={cn(style.form, className)}
       onSubmit={handleSubmit}
       autoComplete="off"

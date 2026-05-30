@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, act } from "@testing-library/react";
+import { render, screen, fireEvent, act, within } from "@testing-library/react";
 import App from "./App";
 import * as waitMock from './helpers/wait';
 
@@ -6,6 +6,21 @@ import * as waitMock from './helpers/wait';
 const waitSpy = jest.spyOn(waitMock, 'wait');
 
 describe('App', () => {
+    it('test within', () => {
+        // Чтобы увидеть подсказку нужно нажать Ctrl + пробел
+        render(<App />);
+
+        // within хорошая замена контейнеру, которую мы использовали обычно
+        const form = screen.getByTestId('form');
+        const userNameInput = within(form).getByLabelText(/User name/);
+        const passwordInput = within(form).getByLabelText(/Password/);
+        const submitButton = within(form).getByRole('button', {name: /Create user/});
+
+        expect(userNameInput).toBeInTheDocument();
+        expect(passwordInput).toBeInTheDocument();
+        expect(submitButton).toBeInTheDocument();
+    });
+
     it('should render App with form elements and a title', () => {
         const { container } = render(<App />);
 
