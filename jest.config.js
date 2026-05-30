@@ -3,7 +3,11 @@
 const config = {
   verbose: true,
   collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.{js,jsx}'],
+  collectCoverageFrom: [
+    'src/**/*.{js,jsx}',
+    '!src/**/index.js',
+    '!src/main.jsx'
+  ],
   coverageDirectory: 'coverage',
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/internal/jest.setup.js'],

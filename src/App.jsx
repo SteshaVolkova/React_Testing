@@ -34,18 +34,18 @@ function App() {
   //   setErrorMessage(error.message);
   // };
 
-  // return (
-  //   <>
-  //     <Title>Create user</Title>
-  //     <Form onSubmit={onSubmit} onSuccess={onSuccess} onError={onError}>
-  //       <Input label="User name" name="name" />
-  //       <Input label="Password" name="password" type="password" />
-  //       <Input type="submit" value="Create user" />
-  //     </Form>
-  //     {successMessage && <Text isSuccess>{successMessage}</Text>}
-  //     {errorMessage && <Text isError>{errorMessage}</Text>}
-  //   </>
-  // );
+  return (
+    <main data-testid="app">
+      <Title>Create user</Title>
+      <Form onSubmit={onSubmit} onSuccess={onSuccess} onError={onError}>
+        <Input label="User name" name="name" />
+        <Input label="Password" name="password" type="password" />
+        <Input type="submit" value="Create user" />
+      </Form>
+      {successMessage && <Text isSuccess>{successMessage}</Text>}
+      {errorMessage && <Text isError>{errorMessage}</Text>}
+    </main>
+  );
 }
 
 export default App;
