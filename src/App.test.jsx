@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, act, within } from "@testing-library/react";
 import App from "./App";
 import * as waitMock from './helpers/wait';
+import { renderWithProviders } from "./utils/renderWithProviders";
 
 // создаём шпиона, он будет шпионить за методом await
 const waitSpy = jest.spyOn(waitMock, 'wait');
@@ -8,7 +9,7 @@ const waitSpy = jest.spyOn(waitMock, 'wait');
 describe('App', () => {
     it('test within', () => {
         // Чтобы увидеть подсказку нужно нажать Ctrl + пробел
-        render(<App />);
+        renderWithProviders(<App />);
 
         // within хорошая замена контейнеру, которую мы использовали обычно
         const form = screen.getByTestId('form');
@@ -22,7 +23,7 @@ describe('App', () => {
     });
 
     it('should render App with form elements and a title', () => {
-        const { container } = render(<App />);
+        renderWithProviders(<App />);
 
         // сгенерировать и заполнить песочницу
         // на https://testing-playground.com/ своим html,
@@ -41,7 +42,10 @@ describe('App', () => {
         const userNameInput = screen.getByLabelText(/User name/);
         const passwordInput = screen.getByLabelText(/Password/);
         const submitButton = screen.getByRole('button', {name: /Create user/});
-        const title = container.querySelector('h1');
+        const title = screen.getByRole('heading', {
+            level: 1,
+            name: /Create user/,
+        });
 
         expect(userNameInput).toBeInTheDocument();
         expect(passwordInput).toBeInTheDocument();
@@ -50,7 +54,7 @@ describe('App', () => {
     });
 
     it('should render error message when form was submit with weak password', async () => {
-        render(<App />);
+        renderWithProviders(<App />);
 
         const userNameInput = screen.getByLabelText(/User name/);
         const passwordInput = screen.getByLabelText(/Password/);
@@ -66,11 +70,16 @@ describe('App', () => {
         expect(errorMessage).not.toBeInTheDocument();
 
         // с эелементами формы сделали определённые операции
-        act(() => {
-            fireEvent.change(userNameInput, {target: {value: 'John'}});
-            fireEvent.change(passwordInput, {target: {value: '123'}});
-            fireEvent.click(submitButton);
-        });
+        // !!! ---------------------------- !!!
+        // act(() => {
+        //     fireEvent.change(userNameInput, {target: {value: 'John'}});
+        //     fireEvent.change(passwordInput, {target: {value: '123'}});
+        //     fireEvent.click(submitButton);
+        // });
+
+        fireEvent.change(userNameInput, { target: { value: 'John' } });
+        fireEvent.change(passwordInput, { target: { value: '123' } });
+        fireEvent.click(submitButton);
 
         // в неё будет сохраняться значение при поиске через screen,
         // но через метод find, все методы find предполагают
@@ -83,7 +92,7 @@ describe('App', () => {
     });
 
     it('should render success message after successful submit', async () => {
-        render(<App />);
+        renderWithProviders(<App />);
 
         const userNameInput = screen.getByLabelText(/User name/);
         const passwordInput = screen.getByLabelText(/Password/);
@@ -109,11 +118,16 @@ describe('App', () => {
         // вызовет, верни просто наш промис, который сразу зарезолвится"
         waitSpy.mockImplementationOnce(() => promise);
 
-        act(() => {
-            fireEvent.change(userNameInput, {target: {value: 'John'}});
-            fireEvent.change(passwordInput, {target: {value: 'Qwe2134#@$'}});
-            fireEvent.click(submitButton);
-        });
+        // !!! ------------------------------ !!!
+        // act(() => {
+        //     fireEvent.change(userNameInput, {target: {value: 'John'}});
+        //     fireEvent.change(passwordInput, {target: {value: 'Qwe2134#@$'}});
+        //     fireEvent.click(submitButton);
+        // });
+
+        fireEvent.change(userNameInput, { target: { value: 'John' } });
+        fireEvent.change(passwordInput, { target: { value: 'Qwer3212@1@' } });
+        fireEvent.click(submitButton);
 
         const successMessageAfterSubmit = await screen.findByText(/created with password/);
 
