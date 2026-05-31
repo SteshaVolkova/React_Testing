@@ -4,28 +4,40 @@ import { Input } from "./Input";
 
 const testPlaceholder = 'test plaseholder';
 
+// у нас есть одинаковые функции в тестах,
+// котороые рендерят каждый раз примерно одно и то же.
+// Мы можем создать внешнюю функцию с рендером.
+function renderComponent(props) {
+    return render(<Input placeholder={testPlaceholder} {...props} />);
+}
+
 describe('Input',() => {
     it('should render the input', () => {
-        render(<Input placeholder={testPlaceholder} />);
+        // Теперь вместо рендера каждый раз мы вызываем функцию.
+        renderComponent();
+        // render(<Input placeholder={testPlaceholder} />);
 
         expect(screen.getByPlaceholderText(testPlaceholder)).toBeInTheDocument();
     });
 
     it('should render the input with the correct type', () => {
-        render(<Input placeholder={testPlaceholder} type="checkbox" />);
+        renderComponent({type: 'checkbox'});
+        // render(<Input placeholder={testPlaceholder} type="checkbox" />);
 
         expect(screen.getByRole('checkbox')).toBeInTheDocument();
     });
 
     it('should render the input with the correct className', () => {
-        const { container } = render(
-            <Input
-             placeholder={testPlaceholder}
-             inputClassName="input-test"
-             containerClassName="container-test"
-            />);
+        renderComponent({inputClassName: 'input-test', containerClassName: 'container-test'});
+        // const { container } = render(
+        //     <Input
+        //      placeholder={testPlaceholder}
+        //      inputClassName="input-test"
+        //      containerClassName="container-test"
+        //     />);
 
-        const containerContainer = container.querySelector('.formControl.container-test');
+        // const containerContainer = container.querySelector('.formControl.container-test');
+        const containerContainer = screen.getByRole('group');
         const containerInput = screen.getByPlaceholderText(testPlaceholder);
 
         expect(containerContainer).toBeInTheDocument();
@@ -34,7 +46,8 @@ describe('Input',() => {
     });
 
     it('should render the input without a label', () => {
-        render(<Input placeholder={testPlaceholder} />);
+        renderComponent();
+        // render(<Input placeholder={testPlaceholder} />);
 
         // если мы отрисовываем асинхронно по условию,
         // используем query - queryByTestId
